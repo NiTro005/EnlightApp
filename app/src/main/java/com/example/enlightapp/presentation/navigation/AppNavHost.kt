@@ -29,7 +29,7 @@ fun AppNavHost(
         composable(Destination.MyCourses.route) {
             MyCoursesScreen(
                 onCourseClick = { courseId ->
-                    navController.navigate(Destination.CourseDetail.createRoute(courseId))
+                    navController.navigate(Destination.CourseDetail.createRoute(courseId, "my"))
                 }
             )
         }
@@ -37,7 +37,7 @@ fun AppNavHost(
         composable(Destination.AllCourses.route) {
             AllCoursesScreen(
                 onCourseClick = { courseId ->
-                    navController.navigate(Destination.CourseDetail.createRoute(courseId))
+                    navController.navigate(Destination.CourseDetail.createRoute(courseId, "all"))
                 }
             )
         }
@@ -45,7 +45,7 @@ fun AppNavHost(
         composable(Destination.NewCourse.route) {
             NewCourseScreen(
                 onCourseClick = { buttonSearch ->
-                    navController.navigate(Destination.CourseDetail.createRoute(buttonSearch ))
+                    navController.navigate(Destination.CourseDetail.createRoute(buttonSearch , "new"))
                 },
                 courseId = "1"
             )
@@ -53,8 +53,10 @@ fun AppNavHost(
 
         composable(Destination.CourseDetail.route) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
+            val source = backStackEntry.arguments?.getString("source") ?: ""
             CourseDetailScreen(
                 courseId = courseId,
+                source = source,
                 onLevelClick = { levelId ->
                     navController.navigate(Destination.Level.createRoute(courseId, levelId))
                 },
@@ -110,6 +112,7 @@ fun MyCoursesScreen(onCourseClick: (String) -> Unit) {
 @Composable
 fun CourseDetailScreen(
     courseId: String,
+    source: String,
     onLevelClick: (String) -> Unit,
     onBack: () -> Unit
 ) {
@@ -118,6 +121,12 @@ fun CourseDetailScreen(
         Button(onClick = { onLevelClick("level1") }) { Text("Уровень 1") }
         Button(onClick = { onLevelClick("level2") }) { Text("Уровень 2") }
         Button(onClick = onBack) { Text("Назад") }
+
+        if (source == "all" || source == "new") {
+            Button(onClick = { /* */ }) {
+                Text("Добавить курс")
+            }
+        }
     }
 }
 
