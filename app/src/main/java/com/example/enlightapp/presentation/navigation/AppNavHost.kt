@@ -174,6 +174,7 @@ fun CourseDetailScreen(
         Button(onClick = { onLevelClick("level2") }) { Text("Уровень 2") }
         Button(onClick = onBack) { Text("Назад") }
 
+        //поменяем на проверку существования из БД, когда подключим БД
         if (source == "all" || source == "new") {
             Button(onClick = onAddCourse) {
                 Text("Добавить курс")
@@ -213,3 +214,10 @@ fun LevelScreen(
         }
     }
 }
+
+
+/**
+ * ПЛАНЫ НА ЧУТЬ ПОЗЖЕ:
+ * -РЕАЛИЗОВАТЬ ЧТЕНИЕ ТОЛЬКО 1 УРОВНЯ (УРОКА), ЕСЛИ КУРС ЕШ НЕ ДОБАВЛЕН В "МОИ" КУРСЫ
+ * -РЕАЛИЗОВАТЬ УДАЛЕНИЕ КУРСОВ ИЗ "МОИХ"
+ */
