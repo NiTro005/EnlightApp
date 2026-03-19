@@ -10,17 +10,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.enlightapp.presentation.model.CoursesViewModel
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    viewModel: CoursesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
+    // получаем список моих курсов
+    val myCourses by viewModel.myCourses.collectAsState()
+
     NavHost(
         navController = navController,
         startDestination = Destination.MyCourses.route,
@@ -28,6 +36,7 @@ fun AppNavHost(
     ) {
         composable(Destination.MyCourses.route) {
             MyCoursesScreen(
+                courses = myCourses,
                 onCourseClick = { courseId ->
                     navController.navigate(Destination.CourseDetail.createRoute(courseId, "my"))
                 }
@@ -44,10 +53,9 @@ fun AppNavHost(
 
         composable(Destination.NewCourse.route) {
             NewCourseScreen(
-                onCourseClick = { buttonSearch ->
-                    navController.navigate(Destination.CourseDetail.createRoute(buttonSearch , "new"))
-                },
-                courseId = "1"
+                onCourseClick = { courseId ->
+                    navController.navigate(Destination.CourseDetail.createRoute(courseId, "new"))
+                }
             )
         }
 
@@ -57,6 +65,10 @@ fun AppNavHost(
             CourseDetailScreen(
                 courseId = courseId,
                 source = source,
+                onAddCourse = {
+                    viewModel.addCourse(courseId)
+                    navController.popBackStack()
+                },
                 onLevelClick = { levelId ->
                     navController.navigate(Destination.Level.createRoute(courseId, levelId))
                 },
@@ -78,10 +90,13 @@ fun AppNavHost(
 
 @Composable
 fun NewCourseScreen(
-    onCourseClick: (String) -> Unit,
-    courseId: String) {
-    Button(onClick = { onCourseClick(courseId) }) {
-        Text("Созать курс")
+    onCourseClick: (String) -> Unit) {
+    val courseId = remember { (1..1000).random().toString() }
+    Column {
+        Text("Найденный курс: $courseId")
+        Button(onClick = { onCourseClick(courseId) }) {
+            Text("Создать курс")
+        }
     }
 }
 
@@ -97,10 +112,12 @@ fun AllCoursesScreen(onCourseClick: (String) -> Unit) {
 }
 
 @Composable
-fun MyCoursesScreen(onCourseClick: (String) -> Unit) {
-    // список курсов пробный
+fun MyCoursesScreen(
+    courses: List<String>,
+    onCourseClick: (String) -> Unit
+) {
     LazyColumn {
-        items(listOf("1", "2", "3")) { courseId ->
+        items(courses) { courseId ->
             Button(onClick = { onCourseClick(courseId) }) {
                 Text("Курс $courseId")
             }
@@ -113,17 +130,19 @@ fun MyCoursesScreen(onCourseClick: (String) -> Unit) {
 fun CourseDetailScreen(
     courseId: String,
     source: String,
+    onAddCourse: () -> Unit,
     onLevelClick: (String) -> Unit,
     onBack: () -> Unit
 ) {
     Column {
+        Text("Тут у нас будет иинформация о курсе. Если что, он очень интересный. Мы вам его рекомендуем.")
         Text("Курс: $courseId")
         Button(onClick = { onLevelClick("level1") }) { Text("Уровень 1") }
         Button(onClick = { onLevelClick("level2") }) { Text("Уровень 2") }
         Button(onClick = onBack) { Text("Назад") }
 
         if (source == "all" || source == "new") {
-            Button(onClick = { /* */ }) {
+            Button(onClick = onAddCourse) {
                 Text("Добавить курс")
             }
         }
