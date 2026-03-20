@@ -18,5 +18,6 @@ data class CourseEntity(
     val courseId: Int,
     val title: String,
     val description: String,
-    val typeId: Int
+    val typeId: Int,
+    val likeCount: Int
 )

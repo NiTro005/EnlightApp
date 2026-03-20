@@ -3,6 +3,7 @@ package com.example.enlightapp.data.local.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.enlightapp.domain.model.ModuleTheory
 
 @Entity("module", foreignKeys = [ForeignKey(
     entity = CourseEntity::class,
@@ -19,5 +20,5 @@ data class ModuleEntity(
     val description: String,
     val serialNumber: Int,
     val workHours: Int,
-    //val theory:
+    val theory: ModuleTheory
 )
