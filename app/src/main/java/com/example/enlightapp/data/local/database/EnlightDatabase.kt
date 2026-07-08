@@ -11,6 +11,7 @@ import com.example.enlightapp.data.local.entity.CourseTypeEntity
 import com.example.enlightapp.data.local.entity.ModuleEntity
 import com.example.enlightapp.data.local.entity.UserCourseEntity
 import com.example.enlightapp.data.local.entity.UserEntity
+import com.example.enlightapp.data.local.entity.UserModuleEntity
 
 @Database(entities = [
     UserEntity::class,
@@ -18,7 +19,7 @@ import com.example.enlightapp.data.local.entity.UserEntity
     CourseTypeEntity::class,
     ModuleEntity::class,
     UserCourseEntity::class,
-    ModuleEntity::class], version = 1, exportSchema = false)
+    UserModuleEntity::class], version = 1, exportSchema = false)
 @TypeConverters(TheoryConverter::class)
 abstract class EnlightDatabase: RoomDatabase() {
     abstract fun userDao()
